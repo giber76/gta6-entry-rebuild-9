@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Solara Bay — an open-world crime game</title>
+<style>
+  html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #0e1a24; font-family: 'Segoe UI', system-ui, sans-serif; }
+  #game-canvas { display: block; width: 100%; height: 100%; }
+  .hud { position: absolute; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.8); pointer-events: none; z-index: 5; }
+  #hud-top { top: 14px; left: 16px; font-size: 20px; font-weight: 700; }
+  #hud-wanted { color: #ffd75e; letter-spacing: 2px; margin-left: 12px; }
+  #hud-health-wrap { width: 180px; height: 10px; background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.6); border-radius: 5px; margin-top: 6px; }
+  #hud-health-fill { height: 100%; width: 100%; background: #37c837; border-radius: 4px; }
+  #hud-radio { margin-top: 6px; font-size: 15px; color: #bfe3ff; }
+  #hud-objective { top: 14px; left: 50%; transform: translateX(-50%); font-size: 16px; background: rgba(0,0,0,0.55); padding: 8px 16px; border-radius: 8px; max-width: 60%; text-align: center; }
+  #hud-speed { bottom: 16px; left: 16px; font-size: 26px; font-weight: 700; }
+  #minimap-wrap { position: absolute; right: 14px; bottom: 14px; z-index: 5; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+  #minimap { display: block; width: 180px; height: 180px; background: #1570ad; }
+  #hud-message { top: 64px; left: 50%; transform: translateX(-50%); font-size: 18px; font-weight: 600; background: rgba(20,40,60,0.85); padding: 10px 18px; border-radius: 8px; opacity: 0; transition: opacity 0.4s; max-width: 70%; text-align: center; }
+  #damage-flash { position: absolute; inset: 0; background: #ff2222; opacity: 0; pointer-events: none; z-index: 4; }
+  .screen { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: linear-gradient(160deg, rgba(10,30,50,0.88), rgba(30,10,40,0.82)); color: #fff; z-index: 10; text-align: center; }
+  .screen h1 { font-size: 64px; margin: 0; letter-spacing: 4px; color: #ffd75e; text-shadow: 0 4px 24px rgba(0,0,0,0.6); }
+  .screen h2 { font-size: 22px; margin: 8px 0 0; font-weight: 400; color: #cfe8ff; }
+  .screen p { font-size: 15px; color: #b8c8d8; max-width: 560px; line-height: 1.6; }
+  .screen button { pointer-events: auto; margin-top: 22px; font-size: 20px; font-weight: 700; padding: 14px 42px; border: none; border-radius: 10px; background: #ffd75e; color: #231a00; cursor: pointer; box-shadow: 0 4px 18px rgba(0,0,0,0.45); }
+  .screen button:hover { background: #ffe27a; }
+  .controls { font-size: 14px; color: #9fb4c8; margin-top: 18px; line-height: 1.9; }
+  #win-screen, #busted-screen { display: none; }
+  #win-cash { font-size: 40px; color: #7dff8a; font-weight: 800; margin-top: 10px; }
+</style>
+</head>
+<body>
+<canvas id="game-canvas"></canvas>
+<div id="damage-flash"></div>
+
+<div class="hud" id="hud-top"><span id="hud-cash">$0</span><span id="hud-wanted">☆☆☆</span>
+  <div id="hud-health-wrap"><div id="hud-health-fill"></div></div>
+  <div id="hud-radio">♪ VICE 101</div>
+</div>
+<div class="hud" id="hud-objective">M1 The First Coupe</div>
+<div class="hud" id="hud-message"></div>
+<div class="hud" id="hud-speed">0 km/h</div>
+<div id="minimap-wrap"><canvas id="minimap" width="180" height="180"></canvas></div>
+
+<div class="screen" id="menu">
+  <h1>SOLARA BAY</h1>
+  <h2>An open-world crime story on the coast — six jobs, one last score.</h2>
+  <p>You are Marlo, a driver in Solara Bay. Steal the coupe, lose the heat, run the package,
+     clear the marina, rob the bank, and steal the boss's black coupe for the $12,000 take.</p>
+  <button id="btn-new">▶ New Game</button>
+  <div class="controls">
+    W drive / walk &nbsp;·&nbsp; A/D steer / turn &nbsp;·&nbsp; S brake &nbsp;·&nbsp; E enter car / hold at vault<br>
+    Mouse click shoot &nbsp;·&nbsp; R radio &nbsp;·&nbsp; Z/X minimap zoom &nbsp;·&nbsp; Esc pause
+  </div>
+</div>
+
+<div class="screen" id="win-screen">
+  <h1>YOU WIN</h1>
+  <h2>The Last Job is done. Solara Bay is yours, Marlo.</h2>
+  <div id="win-cash">$12,000</div>
+  <button id="btn-freeroam">Free Roam</button>
+</div>
+
+<div class="screen" id="busted-screen">
+  <h1>BUSTED</h1>
+  <h2>The Solara Bay PD caught up with you.</h2>
+  <button id="btn-retry">↻ Try Again</button>
+</div>
+
+<script src="./vendor/three.min.js"></script>
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>
